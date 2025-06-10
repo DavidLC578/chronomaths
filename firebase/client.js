@@ -1,6 +1,12 @@
-import * as firebase from "firebase";
+// Firebase App (the core Firebase SDK) is always required
+import { initializeApp } from 'firebase/app';
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup
+} from 'firebase/auth';
 
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCn7YeiQdEyfWNt9a5mxDifWLhj9jU35eg",
     authDomain: "chronomaths-f7cfb.firebaseapp.com",
@@ -12,9 +18,32 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-export const loginWithGoogle = () => {
-    const GoogleProvider = new firebase.auth.GoogleAuthProvider();
-    return firebase.auth().signInWithPopup(GoogleProvider);
+const mapUserFromFirebaseAuthToUser = (user) => {
+    const { displayName, photoURL, email } = user;
+    return { username: displayName, avatar: photoURL, email };
 }
+
+export const onAuthStateChanged = (onChange) => {
+    return auth.onAuthStateChanged(user => {
+        const normalizedUser = user ? mapUserFromFirebaseAuthToUser(user) : null
+        onChange(normalizedUser)
+    });
+};
+
+
+// Configura el proveedor de Google
+const googleProvider = new GoogleAuthProvider();
+
+export const loginWithGoogle = async () => {
+    try {
+        const result = await signInWithPopup(auth, googleProvider);
+        const { user } = result;
+        return mapUserFromFirebaseAuthToUser(user);
+    } catch (error) {
+        console.error("Error durante el inicio de sesión:", error);
+        throw error;
+    }
+};
