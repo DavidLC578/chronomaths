@@ -3,7 +3,7 @@ import { initializeApp } from 'firebase/app';
 import {
     getAuth,
     GoogleAuthProvider,
-    signInWithPopup
+    signInWithPopup,
 } from 'firebase/auth';
 import {
     getFirestore,
@@ -46,7 +46,7 @@ export const onAuthStateChanged = (onChange) => {
 };
 
 
-// Configure Google provider
+// Configure Google providerhttps://tinyurl.com/3st65xj2
 const googleProvider = new GoogleAuthProvider();
 
 export const loginWithGoogle = async () => {
@@ -114,6 +114,29 @@ export const saveResult = async ({ userId, username, avatar, score, mode, date }
 
     } catch (error) {
         console.error("Error saving result:", error);
+        throw error;
+    }
+};
+
+export const getUserResults = async (userId) => {
+    try {
+        const resultsRef = collection(db, 'results');
+        const q = query(resultsRef, where('userId', '==', userId));
+        const snapshot = await getDocs(q);
+
+        const results = {};
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            results[data.mode] = {
+                maxScore: data.maxScore,
+                lastScore: data.score,
+                date: data.date
+            };
+        });
+
+        return results;
+    } catch (error) {
+        console.error("Error fetching user results:", error);
         throw error;
     }
 };
