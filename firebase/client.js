@@ -5,6 +5,16 @@ import {
     GoogleAuthProvider,
     signInWithPopup
 } from 'firebase/auth';
+import {
+    getFirestore,
+    collection,
+    query,
+    where,
+    getDocs,
+    updateDoc,
+    doc,
+    addDoc
+} from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -21,9 +31,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+const db = getFirestore(app);
+
 const mapUserFromFirebaseAuthToUser = (user) => {
-    const { displayName, photoURL, email } = user;
-    return { username: displayName, avatar: photoURL, email };
+    const { uid, displayName, photoURL, email } = user;
+    return { userId: uid, username: displayName, avatar: photoURL, email };
 }
 
 export const onAuthStateChanged = (onChange) => {
@@ -34,7 +46,7 @@ export const onAuthStateChanged = (onChange) => {
 };
 
 
-// Configura el proveedor de Google
+// Configure Google provider
 const googleProvider = new GoogleAuthProvider();
 
 export const loginWithGoogle = async () => {
@@ -54,6 +66,54 @@ export const logout = async () => {
         return true;
     } catch (error) {
         console.error("Error while logging out:", error);
+        throw error;
+    }
+};
+
+export const saveResult = async ({ userId, username, avatar, score, mode, date }) => {
+    try {
+        const resultsRef = collection(db, 'results');
+
+        // Check if a record already exists for this user and mode
+        const q = query(
+            resultsRef,
+            where('userId', '==', userId),
+            where('mode', '==', mode)
+        );
+
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            // If a previous record exists, update the maximum if necessary
+            const docRef = querySnapshot.docs[0];
+            const existingData = docRef.data();
+            const newMaxScore = Math.max(existingData.maxScore || 0, score);
+
+            await updateDoc(doc(db, 'results', docRef.id), {
+                score,
+                maxScore: newMaxScore,
+                date: date > existingData.date ? date : existingData.date
+            });
+
+            return { id: docRef.id, ...existingData, score, maxScore: newMaxScore };
+        } else {
+            // If it doesn't exist, create a new record
+            const newResult = {
+                userId,
+                username,
+                avatar,
+                score,
+                maxScore: score, // For the first record, the current score is the maximum
+                mode,
+                date
+            };
+
+            const docRef = await addDoc(resultsRef, newResult);
+            return { id: docRef.id, ...newResult };
+        }
+
+    } catch (error) {
+        console.error("Error saving result:", error);
         throw error;
     }
 };

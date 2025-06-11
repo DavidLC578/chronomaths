@@ -29,45 +29,69 @@ export default function HomePage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white text-black">
-            <div className="w-full max-w-md space-y-6 text-center">
-                <h1 className="text-2xl font-bold">Hola {user?.username || 'jugador'} 👋</h1>
-                <p className="text-gray-500">¿Qué operación quieres practicar hoy?</p>
+        <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-white text-black">
+            <article className="w-full max-w-md space-y-6 text-center">
+                <header>
+                    <h1 className="text-2xl font-bold">Hola {user?.username || 'jugador'} 👋</h1>
+                    <p className="text-gray-500">¿Qué operación quieres practicar hoy?</p>
+                </header>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <button
-                        onClick={() => goToGame('suma')}
-                        className="py-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-lg font-semibold shadow cursor-pointer"
-                    >
-                        ➕ Suma
-                    </button>
-                    <button
-                        onClick={() => goToGame('resta')}
-                        className="py-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-lg font-semibold shadow cursor-pointer"
-                    >
-                        ➖ Resta
-                    </button>
-                    <button
-                        onClick={() => goToGame('multiplicacion')}
-                        className="py-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-lg font-semibold shadow cursor-pointer"
-                    >
-                        ✖️ Multiplicación
-                    </button>
-                    <button
-                        onClick={() => goToGame('division')}
-                        className="py-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-lg font-semibold shadow cursor-pointer"
-                    >
-                        ➗ División
-                    </button>
-                </div>
+                <section>
+                    <div className="grid grid-cols-2 gap-4">
+                        <button
+                            onClick={() => goToGame('suma')}
+                            className="py-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-lg font-semibold shadow cursor-pointer"
+                        >
+                            ➕ Suma
+                        </button>
+                        <button
+                            onClick={() => goToGame('resta')}
+                            className="py-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-lg font-semibold shadow cursor-pointer"
+                        >
+                            ➖ Resta
+                        </button>
+                        <button
+                            onClick={() => goToGame('multiplicacion')}
+                            className="py-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-lg font-semibold shadow cursor-pointer"
+                        >
+                            ✖️ Multiplicación
+                        </button>
+                        <button
+                            onClick={() => goToGame('division')}
+                            className="py-4 bg-gray-100 hover:bg-gray-200 rounded-xl text-lg font-semibold shadow cursor-pointer"
+                        >
+                            ➗ División
+                        </button>
+                    </div>
+                </section>
 
-                <button
-                    onClick={handleLogout}
-                    className="mt-8 w-full py-3 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
-                >
-                    Cerrar sesión
-                </button>
-            </div>
-        </div>
+                <section>
+                    <hr className="my-6 border-gray-300" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button
+                            onClick={() => router.push('/ranking-general')}
+                            className="py-3 px-4 bg-indigo-100 hover:bg-indigo-200 rounded-xl text-base font-semibold shadow"
+                        >
+                            🏆 Ranking general
+                        </button>
+                        <button
+                            onClick={() => router.push('/ranking-personal')}
+                            className="py-3 px-4 bg-indigo-100 hover:bg-indigo-200 rounded-xl text-base font-semibold shadow"
+                        >
+                            👤 Mi puntuación
+                        </button>
+                    </div>
+                </section>
+
+                <footer>
+                    <button
+                        onClick={handleLogout}
+                        className="mt-8 w-full py-3 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+                    >
+                        Cerrar sesión
+                    </button>
+                </footer>
+            </article>
+        </main>
     );
 }

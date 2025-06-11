@@ -1,9 +1,10 @@
 // pages/game.tsx
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import useUser from '@/hooks/useUser';
+import { saveResult } from '@/firebase/client';
 
 const GAME_DURATION = 60;
 
@@ -23,7 +24,7 @@ export default function GamePage() {
     const [gameOver, setGameOver] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Cuenta atrás antes de empezar
+    // Countdown before starting
     useEffect(() => {
         if (!mode) return;
 
@@ -35,18 +36,37 @@ export default function GamePage() {
         }
     }, [countdown, mode]);
 
-    // Temporizador del juego
+    // Save result when game ends
+    const saveGameResult = useCallback(async () => {
+        if (!user) return;
+
+        try {
+            await saveResult({
+                userId: user.userId || '',
+                username: user.username || 'Jugador',
+                avatar: user.avatar || '',
+                score,
+                mode: mode || 'desconocido',
+                date: new Date().toISOString()
+            });
+        } catch (error) {
+            console.error('Error al guardar el resultado:', error);
+        }
+    }, [user, score, mode]);
+
+    // Game timer
     useEffect(() => {
         if (!gameStarted) return;
         if (timeLeft <= 0) {
             setGameOver(true);
+            saveGameResult();
             return;
         }
         const interval = setInterval(() => setTimeLeft((t) => t - 1), 1000);
         return () => clearInterval(interval);
-    }, [gameStarted, timeLeft]);
+    }, [gameStarted, timeLeft, saveGameResult]);
 
-    // Generar nueva operación
+    // Generate new operation
     const newQuestion = () => {
         const n1 = Math.floor(Math.random() * 50);
         const n2 = Math.floor(Math.random() * 50);
@@ -56,12 +76,12 @@ export default function GamePage() {
         inputRef.current?.focus();
     };
 
-    // Primera pregunta
+    // First question
     useEffect(() => {
         if (gameStarted) newQuestion();
     }, [gameStarted]);
 
-    // Verificar respuesta
+    // Check answer
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         const result = parseInt(input);
@@ -94,7 +114,7 @@ export default function GamePage() {
 
     if (!mode) return <p className="p-4">Cargando...</p>;
 
-    // Vista final del juego
+    // Game over view
     if (gameOver) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black px-4 text-center">
@@ -118,7 +138,7 @@ export default function GamePage() {
                 <>
                     <button
                         onClick={() => router.push('/home')}
-                        className="absolute top-4 right-4 p-2 text-gray-500 hover:text-black transition-colors"
+                        className="absolute cursor-pointer top-4 right-4 p-2 text-gray-500 hover:text-black transition-colors"
                         title="Salir del juego"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -159,7 +179,7 @@ export default function GamePage() {
     );
 }
 
-// Muestra el símbolo de operación
+// Show operation symbol
 function getSymbol(mode: string) {
     switch (mode) {
         case 'suma':
