@@ -69,14 +69,14 @@ export default function HomePage() {
                     <hr className="my-6 border-gray-300" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <button
-                            onClick={() => router.push('/ranking-general')}
-                            className="py-3 px-4 bg-indigo-100 hover:bg-indigo-200 rounded-xl text-base font-semibold shadow"
+                            onClick={() => router.push('/general-ranking')}
+                            className="py-3 px-4 cursor-pointer bg-indigo-100 hover:bg-indigo-200 rounded-xl text-base font-semibold shadow"
                         >
                             🏆 Ranking general
                         </button>
                         <button
-                            onClick={() => router.push('/ranking-personal')}
-                            className="py-3 px-4 bg-indigo-100 hover:bg-indigo-200 rounded-xl text-base font-semibold shadow"
+                            onClick={() => router.push('/personal-ranking')}
+                            className="py-3 px-4 cursor-pointer bg-indigo-100 hover:bg-indigo-200 rounded-xl text-base font-semibold shadow"
                         >
                             👤 Mi puntuación
                         </button>
@@ -86,7 +86,7 @@ export default function HomePage() {
                 <footer>
                     <button
                         onClick={handleLogout}
-                        className="mt-8 w-full py-3 px-4 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+                        className="mt-8 w-full py-3 px-4 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
                     >
                         Cerrar sesión
                     </button>
