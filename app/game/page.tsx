@@ -122,7 +122,7 @@ export default function GamePage() {
                 <p className="text-xl mb-2">Has resuelto <strong>{score}</strong> operaciones correctamente.</p>
                 <button
                     onClick={() => router.push(`/home`, { scroll: false })}
-                    className="mt-4 bg-black text-white py-2 px-6 rounded-xl hover:opacity-90"
+                    className="mt-4 cursor-pointer bg-black text-white py-2 px-6 rounded-xl hover:opacity-90"
                 >
                     Jugar otra vez
                 </button>
