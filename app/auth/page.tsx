@@ -1,28 +1,29 @@
 'use client';
 
 import Image from 'next/image';
-import { AuthError } from 'firebase/auth';
-import { useEffect, useState } from 'react';
-import { loginWithGoogle, onAuthStateChanged } from '@/firebase/client';
-import { User } from '@/interfaces/interfaces';
-import Avatar from '@/components/Avatar/page';
+import { loginWithGoogle } from '@/firebase/client';
+import useUser from '@/hooks/useUser';
 
 export default function AuthPage() {
-    const [user, setUser] = useState<User | undefined>(undefined);
+    const { loading } = useUser(false);
 
-    useEffect(() => {
-        onAuthStateChanged(setUser)
-    }, []);
+    const handleClick = async () => {
+        try {
+            await loginWithGoogle();
+        } catch (error) {
+            console.error('Error during login:', error instanceof Error ? error.message : 'Unknown error');
+        }
+    };
 
-    const handleClick = () => {
-        loginWithGoogle()
-            .then((user: User) => {
-                setUser(user);
-            })
-            .catch((error: AuthError) => {
-                console.error('Error during login:', error.message);
-            });
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+            </div>
+        );
     }
+
+
     return (
         <div className="min-h-screen flex items-center justify-center px-4 bg-white text-black">
             <div className="w-full max-w-md space-y-8 text-center">
@@ -31,22 +32,13 @@ export default function AuthPage() {
                     <h1 className="text-3xl font-bold">Bienvenido</h1>
                     <p className="text-sm text-gray-500">Inicia sesión para entrenar tu mente</p>
                 </div>
-                {user === null && (
-                    <button
-                        onClick={handleClick}
-                        className="flex items-center justify-center w-full gap-3 py-3 px-4 border border-gray-300 rounded-lg shadow-sm cursor-pointer hover:shadow-lg transition duration-200"
-                    >
-                        <Image src="/google-icon.svg" alt="Google" width={20} height={20} />
-                        <span className="font-medium">Iniciar sesión con Google</span>
-                    </button>
-                )}
-                {
-                    user && user.avatar && (
-                        <div>
-                            <Avatar src={user.avatar} alt="Avatar" text={user.username} />
-                        </div>
-                    )
-                }
+                <button
+                    onClick={handleClick}
+                    className="flex items-center justify-center w-full gap-3 py-3 px-4 border border-gray-300 rounded-lg shadow-sm cursor-pointer hover:shadow-lg transition duration-200"
+                >
+                    <Image src="/google-icon.svg" alt="Google" width={20} height={20} />
+                    <span className="font-medium">Iniciar sesión con Google</span>
+                </button>
                 <footer className="pt-8 text-xs text-gray-400">
                     Hecho con 💡 por ti
                 </footer>

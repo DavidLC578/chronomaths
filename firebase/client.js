@@ -43,7 +43,17 @@ export const loginWithGoogle = async () => {
         const { user } = result;
         return mapUserFromFirebaseAuthToUser(user);
     } catch (error) {
-        console.error("Error durante el inicio de sesión:", error);
+        console.error("Error while logging in:", error);
+        throw error;
+    }
+};
+
+export const logout = async () => {
+    try {
+        await auth.signOut();
+        return true;
+    } catch (error) {
+        console.error("Error while logging out:", error);
         throw error;
     }
 };
