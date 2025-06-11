@@ -98,7 +98,7 @@ export default function GamePage() {
                 correct = result === a * b;
                 break;
             case 'division':
-                correct = result === Math.floor(a / b); // puedes adaptar esto
+                correct = result === Math.floor(a / b);
                 break;
             default:
                 break;
