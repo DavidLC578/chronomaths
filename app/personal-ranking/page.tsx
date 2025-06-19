@@ -1,7 +1,7 @@
 // app/ranking-personal/page.tsx
 'use client';
 import { useEffect, useState } from 'react';
-import { getUserResults } from '@/firebase/client';
+import { getUserResults } from '@/firebase/client'
 import useUser from '@/hooks/useUser';
 
 const modes = ['suma', 'resta', 'multiplicación', 'división'];

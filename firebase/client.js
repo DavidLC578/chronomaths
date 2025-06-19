@@ -13,7 +13,8 @@ import {
     getDocs,
     updateDoc,
     doc,
-    addDoc
+    addDoc,
+    orderBy
 } from 'firebase/firestore';
 
 // Your web app's Firebase configuration
@@ -142,24 +143,27 @@ export const getUserResults = async (userId) => {
 };
 
 export const getGeneralResults = async () => {
+    const MODES = ['suma', 'resta', 'multiplicacion', 'division']
     try {
-        const resultsRef = collection(db, 'results');
-        const q = query(resultsRef);
-        const snapshot = await getDocs(q);
+        const topUsers = {};
 
-        let result = []
-        snapshot.forEach(doc => {
-            const data = doc.data()
-            result.push({
-                userId: data.userId,
-                username: data.username,
-                avatar: data.avatar,
-                maxScore: data.maxScore,
-                mode: data.mode
-            })
-        })
+        for (const mode of MODES) {
+            const q = query(
+                collection(db, 'results'),
+                where('mode', '==', mode),
+                orderBy('maxScore', 'desc'),
+            );
 
-        return result
+            const snapshot = await getDocs(q);
+
+            if (!snapshot.empty) {
+                topUsers[mode] = snapshot.docs[0].data();
+            } else {
+                topUsers[mode] = null;
+            }
+        }
+
+        return topUsers;
 
     } catch (error) {
         console.error("Error fetching general results:", error);
