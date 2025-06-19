@@ -140,3 +140,29 @@ export const getUserResults = async (userId) => {
         throw error;
     }
 };
+
+export const getGeneralResults = async () => {
+    try {
+        const resultsRef = collection(db, 'results');
+        const q = query(resultsRef);
+        const snapshot = await getDocs(q);
+
+        let result = []
+        snapshot.forEach(doc => {
+            const data = doc.data()
+            result.push({
+                userId: data.userId,
+                username: data.username,
+                avatar: data.avatar,
+                maxScore: data.maxScore,
+                mode: data.mode
+            })
+        })
+
+        return result
+
+    } catch (error) {
+        console.error("Error fetching general results:", error);
+        throw error;
+    }
+}
