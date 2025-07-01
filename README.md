@@ -53,6 +53,34 @@ ChronoMaths is an engaging math practice game that challenges players to solve a
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## 🐚 Nix Development Environment
+
+This project includes a `shell.nix` file that provides a reproducible development environment using Nix. This ensures all developers use the same versions of Node.js and package managers.
+
+### Prerequisites
+
+- Install [Nix](https://nixos.org/download.html) on your system
+
+### Using the Nix Shell
+
+1. Enter the development environment:
+   ```bash
+   nix-shell
+   ```
+   This will install Node.js 20 and pnpm if they're not already available.
+
+2. Once inside the shell, you can run the development server:
+   ```bash
+   pnpm dev
+   ```
+
+3. To exit the Nix shell when you're done:
+   ```bash
+   exit
+   ```
+
+The Nix shell ensures that all developers have the exact same development environment, making it easier to avoid "works on my machine" issues.
+
 ## 🎮 How to Play
 
 1. Sign in with your account
