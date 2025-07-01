@@ -22,14 +22,13 @@ export default function HomePage() {
     const handleLogout = async () => {
         try {
             await logout();
-            // No need to manually redirect, the useUser hook will handle it for us
         } catch (error) {
             console.error('Error while logging out:', error);
         }
     };
 
     return (
-        <main className="min-h-screen flex flex-col items-center justify-center p-6 bg-white text-black">
+        <main className="min-h-screen flex flex-col items-center justify-center p-6">
             <article className="w-full max-w-md space-y-6 text-center">
                 <header>
                     <h1 className="text-2xl font-bold">Hola {user?.username || 'jugador'} 👋</h1>

@@ -117,7 +117,7 @@ export default function GamePage() {
     // Game over view
     if (gameOver) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center bg-white text-black px-4 text-center">
+            <div className="min-h-screen flex flex-col items-center justify-center px-4 text-center">
                 <h1 className="text-3xl font-bold mb-4">⏱️ ¡Tiempo agotado!</h1>
                 <p className="text-xl mb-2">Has resuelto <strong>{score}</strong> operaciones correctamente.</p>
                 <button

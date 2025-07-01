@@ -25,7 +25,7 @@ export default function AuthPage() {
 
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-white text-black">
+        <div className="min-h-screen flex items-center justify-center px-4">
             <div className="w-full max-w-md space-y-8 text-center">
                 <div>
                     {/* <Image src="/logo.svg" alt="Logo" width={60} height={60} className="mx-auto mb-4" /> */}
